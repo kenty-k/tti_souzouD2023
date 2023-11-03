@@ -18,7 +18,7 @@ def stop_motor():
     motor.stop()
 
 # ウェブカメラのビデオキャプチャを開始
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture()
 
 # 眠っているかどうかを判断するための変数
 sleep_start_time = None
