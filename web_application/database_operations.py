@@ -44,5 +44,18 @@ def get_latest_records(limit=5):
     conn.close()
     return records
 
+# 最新の5つの時間を取得
+def get_latest_elapsedtimes(limit=5):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT elapsed_time FROM study_records
+        ORDER BY id DESC
+        LIMIT ?
+    ''', (limit,))
+    records = cursor.fetchall()
+    conn.close()
+    return records
+
 if __name__ == '__main__':
     create_table()

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import time
-from database_operations import create_table, record_study_time, get_latest_records
+from database_operations import create_table, record_study_time, get_latest_records, get_latest_elapsedtimes
 from button_control import handle_button_press
 
 app = Flask(__name__)
@@ -8,8 +8,8 @@ app = Flask(__name__)
 # メインページ
 @app.route('/')
 def index():
-    latest_records = get_latest_records()
-    return render_template('index.html', latest_records=latest_records)
+    data = get_latest_elapsedtimes(limit=5)
+    return render_template('index.html', data=data)
 
 # ボタンが押されたときの動作呼び出し
 @app.route('/button_pressed', methods=['POST'])
