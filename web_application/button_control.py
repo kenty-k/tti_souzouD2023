@@ -3,7 +3,7 @@ import time
 from database_operations import record_study_time
 
 # GPIOピン番号
-button_pin = 17
+button_pin = 18
 
 # GPIO設定
 GPIO.setmode(GPIO.BCM)

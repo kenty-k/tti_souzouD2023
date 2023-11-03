@@ -11,12 +11,6 @@ def index():
     data = get_latest_elapsedtimes(limit=5)
     return render_template('index.html', data=data)
 
-# ボタンが押されたときの動作呼び出し
-@app.route('/button_pressed', methods=['POST'])
-def button_pressed():
-    result = handle_button_press()
-    return result
-
 if __name__ == '__main__':
     create_table()
     app.run(debug=True, host='0.0.0.0')
