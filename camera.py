@@ -1,23 +1,21 @@
 import cv2
 import time
-import RPi.GPIO as GPIO
+from buildhat import Motor
 
 # 顔と目を検出するためのカスケード分類器をロード
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
 
-# モーターの設定
-MOTOR_PIN = 17
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(MOTOR_PIN, GPIO.OUT)
+# モーターの初期設定
+motor = Motor('A')
 
 def start_motor():
     """モーターを動かす関数"""
-    GPIO.output(MOTOR_PIN, GPIO.HIGH)
+    motor.start()
 
 def stop_motor():
     """モーターを停止する関数"""
-    GPIO.output(MOTOR_PIN, GPIO.LOW)
+    motor.stop()
 
 # ウェブカメラのビデオキャプチャを開始
 cap = cv2.VideoCapture(0)
@@ -32,10 +30,7 @@ while True:
         print("Failed to grab frame")
         break
 
-    # グレースケールに変換
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    # 顔を検出
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     for (x, y, w, h) in faces:
@@ -56,16 +51,10 @@ while True:
                     start_motor()
                     sleep_detected = True
 
-    # ビデオストリームを表示
     cv2.imshow('Video', frame)
 
-    # 'q'キーでループを終了
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# ウェブカメラのビデオキャプチャを終了
 cap.release()
 cv2.destroyAllWindows()
-
-# GPIOのクリーンアップ
-GPIO.cleanup()
