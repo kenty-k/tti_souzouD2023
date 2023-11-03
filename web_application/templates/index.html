@@ -2,26 +2,49 @@
 <html>
 <head>
     <title>Study Time Tracker</title>
-    <!-- ここでCSSファイルをリンクするなど、必要なスタイルを読み込む -->
+    <!-- ここで必要なスタイルシートを読み込むなどの設定を行う -->
 </head>
 <body>
     <h1>Study Time Tracker</h1>
 
-    <h2>記録開始／停止</h2>
-    <button id="record-button">Start/Stop</button>
-    <p id="status"></p>
+    <h2>最新の5つのデータ（棒グラフ）</h2>
+    <div id="bar-chart-container">
+        <canvas id="bar-chart"></canvas>
+    </div>
 
-    <h2>最新の5つの記録</h2>
-    <ul id="latest-records">
-        {% for record in latest_records %}
-            <li>{{ record[0] }}: {{ record[1] }} - {{ record[2] }} ({{ record[3] }}秒)</li>
-        {% endfor %}
-    </ul>
+    <!-- Chart.js ライブラリを読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- ここでJavaScriptファイルをリンクするなど、必要なスクリプトを読み込む -->
+    <!-- JavaScriptコードを埋め込む -->
+    <script>
+                // データをラベルと値の配列に変換
+        var labels = ["Data 1", "Data 2", "Data 3", "Data 4", "Data 5"]; // ラベル
+        var data = {{ data | tojson | safe }};
+        // data変数にはサーバーサイドから渡されたデータが格納される; // 値
 
-</body>
-</html>
+        // Canvas要素と2Dコンテキストを取得
+        var canvas = document.getElementById('bar-chart');
+        var ctx = canvas.getContext('2d');
 
-
-
+        // 棒グラフを描画
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Study Time',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // 棒の色
+                    borderColor: 'rgba(75, 192, 192, 1)', // 棒の境界線の色
+                    borderWidth: 1 // 棒の境界線の幅
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true // Y軸を0から始める
+                    }
+                }
+            }
+        });
+        
